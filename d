@@ -1845,7 +1845,7 @@ return t.c
 end
 end
 do -- u
-local function fn35()local I= tbl17 .t();local l,W,N=I.GuiService,I.UserInputService,{DesignSize=UDim2.fromOffset(919,643),MinSize=UDim2.fromOffset(700,400),Scale=1};local function I()return workspace.CurrentCamera;end;local function P(a)if not a then return false;end;a=I();if a==nil then return false;end;local I=a.ViewportSize;return math.min(I.X,I.Y)>500;end;local function I(a)if a then return false;end;a=W.PreferredInput;if a==Enum.PreferredInput.Touch then return true;end;if a==Enum.PreferredInput.KeyboardAndMouse or a==Enum.PreferredInput.Gamepad then return false;end;a=W:GetLastInputType();if a==Enum.UserInputType.Touch then return true;end;if a==Enum.UserInputType.MouseButton1 or a==Enum.UserInputType.MouseButton2 or a==Enum.UserInputType.MouseMovement or a==Enum.UserInputType.Keyboard then return false;end;return W.TouchEnabled and not W.KeyboardEnabled;end;local a=l:IsTenFootInterface();local l=I(a);local I;N.IsMobile=function()return l;end;N.ForceMobileLayout=function(e)l=true;I=e==true;end;N.IsTablet=function()local l=I;if l==nil then l=P(N.IsMobile());I=l;end;return l;end;N.HasTouch=function()return not a and W.TouchEnabled;end;N.WantsMobileButtons=function()return N.HasTouch()or(N.IsMobile());end;return N;end
+local function fn35()local I= tbl17 .t();local l,W,N=I.GuiService,I.UserInputService,{DesignSize=UDim2.fromOffset(780,820),MinSize=UDim2.fromOffset(700,400),Scale=1};local function I()return workspace.CurrentCamera;end;local function P(a)if not a then return false;end;a=I();if a==nil then return false;end;local I=a.ViewportSize;return math.min(I.X,I.Y)>500;end;local function I(a)if a then return false;end;a=W.PreferredInput;if a==Enum.PreferredInput.Touch then return true;end;if a==Enum.PreferredInput.KeyboardAndMouse or a==Enum.PreferredInput.Gamepad then return false;end;a=W:GetLastInputType();if a==Enum.UserInputType.Touch then return true;end;if a==Enum.UserInputType.MouseButton1 or a==Enum.UserInputType.MouseButton2 or a==Enum.UserInputType.MouseMovement or a==Enum.UserInputType.Keyboard then return false;end;return W.TouchEnabled and not W.KeyboardEnabled;end;local a=l:IsTenFootInterface();local l=I(a);local I;N.IsMobile=function()return l;end;N.ForceMobileLayout=function(e)l=true;I=e==true;end;N.IsTablet=function()local l=I;if l==nil then l=P(N.IsMobile());I=l;end;return l;end;N.HasTouch=function()return not a and W.TouchEnabled;end;N.WantsMobileButtons=function()return N.HasTouch()or(N.IsMobile());end;return N;end
 
 tbl17.u = function()
 local u = tbl17.cache.u
@@ -15439,7 +15439,7 @@ return arg4.Label
 end)
 end
 
-arg3:BindStateful("Accent", function(imageColor3)
+arg3:BindStateful("Background", function(imageColor3)
 if obj._selected then
 obj._icon.ImageColor3 = imageColor3
 obj._label.TextColor3 = imageColor3
@@ -15464,7 +15464,7 @@ arg._selected = selected
 local str7 = "Unselected"
 
 if selected then
-str7 = "Accent"
+str7 = "Background"
 end
 
 local v119 = v118.get(str7)
@@ -15601,7 +15601,7 @@ frame5.ZIndex = 0
 frame5.Parent = instance3
 local instance5 = Instance.new(v86[46])
 instance5.Rotation = v86[45]
-arg3:BindGradient(instance5, { "TabHighlight", "TabButtonSelected", v86[191] }, { 0, 0.5, 1 })
+arg3:BindGradient(instance5, { "TabHighlight", "TabHighlight", "TabHighlight" }, { 0, 0.5, 1 })
 instance5.Parent = frame5
 local instance6 = Instance.new(v86[98])
 instance6.CornerRadius = UDim.new(0, 10)
@@ -16324,7 +16324,7 @@ return UDim2.fromOffset(math.floor(n), floor2(n33))
 end
 
 local n = math.clamp(v117.X * 0.8, v118, designSize.X.Offset)
-local n33 = math.clamp(v117.Y * 0.7, v119, designSize.Y.Offset)
+local n33 = math.clamp(v117.Y * 0.78, v119, designSize.Y.Offset)
 local floor2 = math.floor
 return UDim2.fromOffset(math.floor(n), floor2(n33))
 end,
@@ -67117,7 +67117,22 @@ function Waveflow.installHooks()
 end
 
 local CARD_H = 136
-local ROW_Y = { 44, 74, 104 }
+--  A read-out is 30px tall (12px key, 17px value, 1px gap), so these rows are
+--  contiguous. Rows four and five sit under the hairline that separates the
+--  place identity from the live session counters, and the whole page is sized
+--  to fit the default window so Home never shows a scrollbar.
+local ROW_Y = { 44, 74, 104, 148, 178 }
+local CARD_TALL = 210
+--  Card columns are fractions, not pixel offsets: the window is resizable and
+--  the fixed columns this dashboard shipped with clipped on the right.
+local COL_A = UDim.new(0, 16)
+local COL_B = UDim.new(0.5, 8)
+local HALF = UDim.new(0.5, -24)
+local COL_C = UDim.new(0.333, 10)
+local COL_D = UDim.new(0.666, 3)
+local THIRD = UDim.new(0.333, -18)
+local COL_TEXT = UDim.new(0, 108)
+local W_TEXT = UDim.new(0.5, -124)
 
 function Waveflow.card(trove, batch, parent, title, subtitle)
     local card = Instance.new("Frame")
@@ -67174,12 +67189,13 @@ function Waveflow.card(trove, batch, parent, title, subtitle)
     return card
 end
 
---  A key/value read-out: muted label above, value below.
+--  A key/value read-out: muted label above, value below. `x` and `w` are UDims
+--  so a column can track the card's width instead of a fixed pixel offset.
 function Waveflow.readout(trove, batch, parent, key, value, x, y, w)
     local k = Instance.new("TextLabel")
     k.BackgroundTransparency = 1
-    k.Position = UDim2.new(0, x, 0, y)
-    k.Size = UDim2.new(0, w, 0, 12)
+    k.Position = UDim2.new(x.Scale, x.Offset, 0, y)
+    k.Size = UDim2.new(w.Scale, w.Offset, 0, 12)
     k.Font = Enum.Font.Gotham
     k.TextSize = 9
     k.TextXAlignment = Enum.TextXAlignment.Left
@@ -67190,8 +67206,8 @@ function Waveflow.readout(trove, batch, parent, key, value, x, y, w)
 
     local v = Instance.new("TextLabel")
     v.BackgroundTransparency = 1
-    v.Position = UDim2.new(0, x, 0, y + 13)
-    v.Size = UDim2.new(0, w, 0, 17)
+    v.Position = UDim2.new(x.Scale, x.Offset, 0, y + 13)
+    v.Size = UDim2.new(w.Scale, w.Offset, 0, 17)
     v.Font = Enum.Font.GothamMedium
     v.TextSize = 14
     v.TextXAlignment = Enum.TextXAlignment.Left
@@ -67227,43 +67243,6 @@ function Waveflow.picture(trove, batch, parent, x, y, size)
     return img
 end
 
-function Waveflow.button(trove, batch, parent, text, onClick, x, y, w, h)
-    local b = Instance.new("TextButton")
-    b.AutoButtonColor = false
-    b.Text = ""
-    b.BorderSizePixel = 0
-    b.Position = UDim2.new(0, x, 0, y)
-    b.Size = UDim2.new(0, w, 0, h)
-    batch:Bind(b, "BackgroundColor3", "ToggleBackgroundUnselected")
-    b.Parent = parent
-    trove:Add(b)
-
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 8)
-    corner.Parent = b
-
-    local s = Instance.new("UIStroke")
-    s.Thickness = 1
-    s.Transparency = 0.45
-    batch:Bind(s, "Color", "Outline")
-    s.Parent = b
-
-    local l = Instance.new("TextLabel")
-    l.BackgroundTransparency = 1
-    l.Size = UDim2.new(1, 0, 1, 0)
-    l.Font = Enum.Font.GothamMedium
-    l.TextSize = 12
-    l.Text = text
-    batch:Bind(l, "TextColor3", "TextColor")
-    l.Parent = b
-    trove:Add(l)
-
-    b.MouseEnter:Connect(function() s.Transparency = 0 end)
-    b.MouseLeave:Connect(function() s.Transparency = 0.45 end)
-    b.MouseButton1Click:Connect(function() pcall(onClick) end)
-    return b, l
-end
-
 function Waveflow.formatDuration(seconds)
     seconds = math.max(0, math.floor(seconds))
     local h = math.floor(seconds / 3600)
@@ -67271,6 +67250,17 @@ function Waveflow.formatDuration(seconds)
     local s = seconds % 60
     if h > 0 then return string.format("%dh %02dm %02ds", h, m, s) end
     return string.format("%dm %02ds", m, s)
+end
+
+--  A Rivals island reports its own place name as "UGC", and the universe name
+--  needs a web lookup this client may refuse, so the dashboard falls back to
+--  the product rather than printing "Unavailable" where a name belongs.
+function Waveflow.gameLabel(value)
+    local text = tostring(value)
+    if text == "" or text == "Unavailable" or text == "Ugc" or text == "UGC" then
+        return "Rivals"
+    end
+    return text
 end
 
 --  Resolve runtime facts. Anything the client will not give us stays
@@ -67452,8 +67442,8 @@ function Waveflow.buildHomeTab(menu)
     trove:Add(list)
 
     local pad = Instance.new("UIPadding")
-    pad.PaddingTop = UDim.new(0, 4)
-    pad.PaddingBottom = UDim.new(0, 16)
+    pad.PaddingTop = UDim.new(0, 2)
+    pad.PaddingBottom = UDim.new(0, 10)
     pad.Parent = scroll
     trove:Add(pad)
 
@@ -67467,10 +67457,10 @@ function Waveflow.buildHomeTab(menu)
     --  Player profile ----------------------------------------------------
     local profile = band(Waveflow.card(trove, batch, scroll, "Player profile", nil))
     local avatar = Waveflow.picture(trove, batch, profile, 16, 44, 80)
-    Waveflow.readout(trove, batch, profile, "Display name", facts.DisplayName, 108, ROW_Y[1], 300)
-    Waveflow.readout(trove, batch, profile, "Username", "@" .. tostring(facts.Username), 108, ROW_Y[2], 300)
-    Waveflow.readout(trove, batch, profile, "User ID", facts.UserId, 108, ROW_Y[3], 300)
-    Waveflow.readout(trove, batch, profile, "Local player", tostring(Players.LocalPlayer), 424, ROW_Y[1], 320)
+    Waveflow.readout(trove, batch, profile, "Display name", facts.DisplayName, COL_TEXT, ROW_Y[1], W_TEXT)
+    Waveflow.readout(trove, batch, profile, "Username", "@" .. tostring(facts.Username), COL_TEXT, ROW_Y[2], W_TEXT)
+    Waveflow.readout(trove, batch, profile, "User ID", facts.UserId, COL_TEXT, ROW_Y[3], W_TEXT)
+    Waveflow.readout(trove, batch, profile, "Local player", tostring(Players.LocalPlayer), COL_B, ROW_Y[1], HALF)
 
     task.spawn(function()
         local ok, id = pcall(function() return Players.LocalPlayer.UserId end)
@@ -67504,11 +67494,32 @@ function Waveflow.buildHomeTab(menu)
         ph.Parent = thumb
         trove:Add(ph)
     end
-    local gameNameRow = Waveflow.readout(trove, batch, gameCard, "Game", facts.UniverseName, 108, ROW_Y[1], 300)
-    Waveflow.readout(trove, batch, gameCard, "Place", facts.PlaceName, 108, ROW_Y[2], 300)
-    Waveflow.readout(trove, batch, gameCard, "PlaceId", facts.PlaceId, 108, ROW_Y[3], 140)
-    Waveflow.readout(trove, batch, gameCard, "GameId", facts.GameId, 260, ROW_Y[3], 148)
-    Waveflow.readout(trove, batch, gameCard, "Server JobId", facts.JobId, 424, ROW_Y[1], 320)
+    --  One band for both halves of "where am I": the place identity above the
+    --  hairline, the live session counters below it.
+    gameCard.Size = UDim2.new(1, 0, 0, CARD_TALL)
+    local gameNameRow = Waveflow.readout(trove, batch, gameCard, "Game", Waveflow.gameLabel(facts.UniverseName), COL_TEXT, ROW_Y[1], W_TEXT)
+    Waveflow.readout(trove, batch, gameCard, "Place", Waveflow.gameLabel(facts.PlaceName), COL_TEXT, ROW_Y[2], W_TEXT)
+    Waveflow.readout(trove, batch, gameCard, "PlaceId", facts.PlaceId, COL_TEXT, ROW_Y[3], W_TEXT)
+    Waveflow.readout(trove, batch, gameCard, "Server JobId", facts.JobId, COL_B, ROW_Y[1], HALF)
+    Waveflow.readout(trove, batch, gameCard, "GameId", facts.GameId, COL_B, ROW_Y[2], HALF)
+
+    local rule = Instance.new("Frame")
+    rule.BackgroundTransparency = 0.6
+    rule.BorderSizePixel = 0
+    rule.Position = UDim2.new(0, 16, 0, 140)
+    rule.Size = UDim2.new(1, -32, 0, 1)
+    batch:Bind(rule, "BackgroundColor3", "Outline")
+    rule.Parent = gameCard
+    trove:Add(rule)
+
+    --  Six short counters read better as a three-column strip than as two long
+    --  columns: it costs one row instead of three.
+    local sessionLabel = Waveflow.readout(trove, batch, gameCard, "Session duration", "0m 00s", COL_A, ROW_Y[4], THIRD)
+    local fpsLabel = Waveflow.readout(trove, batch, gameCard, "Frame rate", "...", COL_C, ROW_Y[4], THIRD)
+    local pingLabel = Waveflow.readout(trove, batch, gameCard, "Ping", "Unavailable", COL_D, ROW_Y[4], THIRD)
+    local featureLabel = Waveflow.readout(trove, batch, gameCard, "Bound features", "counting", COL_A, ROW_Y[5], THIRD)
+    local pageLabel = Waveflow.readout(trove, batch, gameCard, "Rail sections", "...", COL_C, ROW_Y[5], THIRD)
+    local instanceLabel = Waveflow.readout(trove, batch, gameCard, "Workspace instances", "...", COL_D, ROW_Y[5], THIRD)
 
     if facts.UniverseName == "Unavailable" or not facts.UniverseIcon then
         task.spawn(function()
@@ -67516,7 +67527,7 @@ function Waveflow.buildHomeTab(menu)
                 task.wait(1)
                 local complete = Waveflow.readGameInfo(facts, attempt >= 4)
                 pcall(function()
-                    gameNameRow.Text = facts.UniverseName
+                    gameNameRow.Text = Waveflow.gameLabel(facts.UniverseName)
                     if facts.UniverseIcon then
                         thumb.Image = facts.UniverseIcon
                         local placeholder = thumb:FindFirstChild("NoIcon")
@@ -67531,26 +67542,17 @@ function Waveflow.buildHomeTab(menu)
     --  Execution environment --------------------------------------------
     local envCard = band(Waveflow.card(trove, batch, scroll, "Execution environment",
         "Only values this client actually reports are shown."))
-    envCard.Size = UDim2.new(1, 0, 0, 166)
-    Waveflow.readout(trove, batch, envCard, "Executor", facts.ExecutorName, 16, ROW_Y[1], 360)
-    Waveflow.readout(trove, batch, envCard, "Executor version", facts.ExecutorVersion, 400, ROW_Y[1], 344)
-    Waveflow.readout(trove, batch, envCard, "Client build", facts.ClientBuild, 16, ROW_Y[2], 360)
-    Waveflow.readout(trove, batch, envCard, "Interface", WAVEFLOW_UI_REVISION, 400, ROW_Y[2], 344)
-    Waveflow.readout(trove, batch, envCard, "Script version", WAVEFLOW_VERSION, 16, ROW_Y[3], 360)
+    envCard.Size = UDim2.new(1, 0, 0, CARD_H)
+    Waveflow.readout(trove, batch, envCard, "Executor", facts.ExecutorName, COL_A, ROW_Y[1], HALF)
+    Waveflow.readout(trove, batch, envCard, "Executor version", facts.ExecutorVersion, COL_B, ROW_Y[1], HALF)
+    Waveflow.readout(trove, batch, envCard, "Client build", facts.ClientBuild, COL_A, ROW_Y[2], HALF)
+    Waveflow.readout(trove, batch, envCard, "Interface", WAVEFLOW_UI_REVISION, COL_B, ROW_Y[2], HALF)
+    Waveflow.readout(trove, batch, envCard, "Script version", WAVEFLOW_VERSION, COL_A, ROW_Y[3], HALF)
     if not facts.ExecutorKnown then
-        Waveflow.readout(trove, batch, envCard, "Identification", "Unsupported by this runtime", 400, ROW_Y[3], 344)
+        Waveflow.readout(trove, batch, envCard, "Identification", "Unsupported by this runtime", COL_B, ROW_Y[3], HALF)
     end
 
-    --  Session -----------------------------------------------------------
-    local sessionCard = band(Waveflow.card(trove, batch, scroll, "Session", nil))
-    sessionCard.Size = UDim2.new(1, 0, 0, 166)
-    local sessionLabel = Waveflow.readout(trove, batch, sessionCard, "Session duration", "0m 00s", 16, ROW_Y[1], 360)
-    local featureLabel = Waveflow.readout(trove, batch, sessionCard, "Bound features", "counting", 400, ROW_Y[1], 344)
-    local fpsLabel = Waveflow.readout(trove, batch, sessionCard, "Frame rate", "...", 16, ROW_Y[2], 360)
-    local pingLabel = Waveflow.readout(trove, batch, sessionCard, "Ping", "Unavailable", 400, ROW_Y[2], 344)
-    local pageLabel = Waveflow.readout(trove, batch, sessionCard, "Rail sections", "...", 16, ROW_Y[3], 360)
-    local instanceLabel = Waveflow.readout(trove, batch, sessionCard, "Workspace instances", "...", 400, ROW_Y[3], 344)
-
+    --  Live counters for the session half of the current-game band ---------
     task.spawn(function()
         local frames, last = 0, os.clock()
         while not K.destroyed do
@@ -67591,24 +67593,161 @@ function Waveflow.buildHomeTab(menu)
     end)
 
     --  Quick navigation --------------------------------------------------
-    local navCard = band(Waveflow.card(trove, batch, scroll, "Quick navigation",
-        "Jump straight to a section."))
-    navCard.Size = UDim2.new(1, 0, 0, 150)
+    local navCard = band(Waveflow.card(trove, batch, scroll, "Quick navigation", nil))
+    navCard.Size = UDim2.new(1, 0, 0, 102)
 
-    local targets = {}
-    for _, label in ipairs({ "Combat", "Visuals", "Player", "World", "Cosmetics", "Automation", "Settings" }) do
-        local target = K.WaveflowTabs[label]
-        if target then targets[#targets + 1] = { label, target } end
+    local box = Instance.new("Frame")
+    box.Name = "WaveflowSearch"
+    box.Position = UDim2.new(0, 16, 0, 38)
+    box.Size = UDim2.new(1, -32, 0, 38)
+    box.BorderSizePixel = 0
+    batch:Bind(box, "BackgroundColor3", "ToggleBackgroundUnselected")
+    box.Parent = navCard
+    trove:Add(box)
+
+    local boxCorner = Instance.new("UICorner")
+    boxCorner.CornerRadius = UDim.new(0, 8)
+    boxCorner.Parent = box
+
+    local boxStroke = Instance.new("UIStroke")
+    boxStroke.Thickness = 1
+    boxStroke.Transparency = 0.45
+    batch:Bind(boxStroke, "Color", "Outline")
+    boxStroke.Parent = box
+
+    local glass = Instance.new("ImageLabel")
+    glass.BackgroundTransparency = 1
+    glass.BorderSizePixel = 0
+    glass.Image = "rbxassetid://72296609649861"
+    glass.Size = UDim2.fromOffset(16, 16)
+    glass.Position = UDim2.new(0, 13, 0.5, -8)
+    batch:Bind(glass, "ImageColor3", "Unselected")
+    glass.Parent = box
+    trove:Add(glass)
+
+    local field = Instance.new("TextBox")
+    field.BackgroundTransparency = 1
+    field.BorderSizePixel = 0
+    field.Text = ""
+    field.PlaceholderText = "Search the hub  -  try \"aimbot\" or \"esp\""
+    field.TextSize = 13
+    field.Font = Enum.Font.GothamMedium
+    field.TextXAlignment = Enum.TextXAlignment.Left
+    field.ClearTextOnFocus = false
+    field.Size = UDim2.new(1, -64, 1, -2)
+    field.Position = UDim2.new(0, 37, 0, 1)
+    batch:Bind(field, "TextColor3", "TextColor")
+    batch:Bind(field, "PlaceholderColor3", "Unselected")
+    field.Parent = box
+    trove:Add(field)
+
+    local hint = Instance.new("TextLabel")
+    hint.BackgroundTransparency = 1
+    hint.Position = UDim2.new(0, 16, 0, 82)
+    hint.Size = UDim2.new(1, -32, 0, 14)
+    hint.Text = "Type to search. Click a result to jump straight to it."
+    hint.TextSize = 10
+    hint.Font = Enum.Font.Gotham
+    hint.TextXAlignment = Enum.TextXAlignment.Left
+    hint.TextTruncate = Enum.TextTruncate.AtEnd
+    batch:Bind(hint, "TextColor3", "Unselected")
+    hint.Parent = navCard
+    trove:Add(hint)
+
+    --  The palette sizes and anchors its dropdown from whatever it is shown
+    --  against, so the box itself would stretch a 260px list across the card.
+    --  This keeps the dropdown the width the hub designs it at, under the field.
+    local anchor = Instance.new("Frame")
+    anchor.BackgroundTransparency = 1
+    anchor.BorderSizePixel = 0
+    anchor.Size = UDim2.fromOffset(260, 0)
+    anchor.Position = UDim2.new(0, 0, 1, 0)
+    anchor.Parent = box
+    trove:Add(anchor)
+
+    local HINT_IDLE = hint.Text
+
+    --  The results list is the menu's own search palette, which every page's
+    --  Ctrl+F bar already drives: it indexes all tabs, sub-pages, sections and
+    --  controls, and opening a hit reveals and highlights it. Re-using it keeps
+    --  one search implementation and one result renderer in the hub.
+    --
+    --  Pages realise their controls on first open and that does not invalidate
+    --  the index, so a search run before the user has visited a tab can only see
+    --  its tab and section titles. Refreshing on the way back into Home picks up
+    --  everything realised while the user was away, at the cost of one rebuild
+    --  per visit instead of one per keystroke.
+    local function refreshIndex()
+        pcall(function() menu:InvalidateSearch() end)
     end
 
-    local COLS, BW, BH, GAP = 4, 176, 34, 12
-    for i, entry in ipairs(targets) do
-        local col = (i - 1) % COLS
-        local row = math.floor((i - 1) / COLS)
-        Waveflow.button(trove, batch, navCard, entry[1], function()
-            entry[2]:Open()
-        end, 16 + col * (BW + GAP), 52 + row * (BH + GAP), BW, BH)
+    local function closeResults()
+        refreshIndex()
+        pcall(function() menu:HideSearchResults() end)
     end
+
+    local function runSearch(text)
+        if text == "" then
+            closeResults()
+            hint.Text = HINT_IDLE
+            return
+        end
+
+        local ok, hits = pcall(function()
+            return menu:SearchQuery(text)
+        end)
+        if not ok then
+            hint.Text = "Search is unavailable in this build."
+            return
+        end
+
+        hits = tonumber(hits) or 0
+        if hits == 0 then
+            hint.Text = "Nothing matches \"" .. text .. "\"."
+        else
+            hint.Text = string.format("%d match%s - click one to jump there.", hits, hits == 1 and "" or "es")
+        end
+        pcall(function()
+            menu:ShowSearchResults(anchor)
+        end)
+    end
+
+    trove:Connect(field:GetPropertyChangedSignal("Text"), function()
+        runSearch(field.Text)
+    end)
+
+    --  Losing focus must never close the list while a query is on screen: a
+    --  result row is only activated on mouse *release*, and the mouse-down that
+    --  takes focus away happens on that very row. Closing here silently drops
+    --  every click on the first visible result. The hub's own search bar collapses
+    --  only on an empty field for exactly this reason, and clicks outside the
+    --  palette are already handled by its registered overlay.
+    trove:Connect(field.FocusLost, function()
+        if field.Text == "" then
+            closeResults()
+        end
+    end)
+
+    --  Clicking back into a field that still holds a query re-opens the list.
+    pcall(function()
+        trove:Connect(field.Focused, function()
+            refreshIndex()
+            if field.Text ~= "" then
+                runSearch(field.Text)
+            end
+        end)
+    end)
+
+    trove:Connect(tab.Opened, function(open)
+        if open then
+            refreshIndex()
+            return
+        end
+        field.Text = ""
+        closeResults()
+    end)
+
+    refreshIndex()
 
     return tab
 end
