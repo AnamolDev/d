@@ -29,6 +29,19 @@ local function load()
         end
     end
 
+    -- MURDER MYSTERY 2
+    local MM2PlaceIds = {
+        142823291,
+        335132309
+    }
+
+    for _, id in ipairs(MM2PlaceIds) do
+        if PlaceId == id then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/AnamolDev/mm2/refs/heads/main/main"))()
+            return
+        end
+    end
+
     warn("Unsupported game!")
 end
 
