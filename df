@@ -44,7 +44,7 @@ local function load()
 
     -- FLICK
     local FlickPlaceIds = {
-        -- Add Flick PlaceId here
+        136801880565837,
     }
 
     for _, id in ipairs(FlickPlaceIds) do
