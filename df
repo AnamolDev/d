@@ -42,6 +42,18 @@ local function load()
         end
     end
 
+    -- FLICK
+    local FlickPlaceIds = {
+        -- Add Flick PlaceId here
+    }
+
+    for _, id in ipairs(FlickPlaceIds) do
+        if PlaceId == id then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/AnamolDev/flick/refs/heads/main/Main"))()
+            return
+        end
+    end
+
     warn("Unsupported game!")
 end
 
